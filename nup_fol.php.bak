@@ -1,0 +1,43 @@
+<?php
+
+$mid="MS1378988982";
+$key="2oRYQabFfMaJr5Y71PqHxBYhinPHQIdH";
+$iv="Prq6bSGsFAv5234C";
+
+
+$data1=http_build_query(array(
+'MerchantID'=>$mid,
+'TimeStamp'=>time(),
+'Version'=>'2.0',
+'RespondType'=>'JSON',
+'MerchantOrderNo'=>"MyOrder".time(),
+'Amt'=>'1',
+'ItemDesc' =>'商品說明',
+"NotifyURL"=>"https://wcmoc.line-fans.com/wp_notify_lom.php?ID=411135053"
+
+));
+
+echo "原始資料:<br><font color=red>".$data1."</font><br><br>加密資料:";
+
+
+$edata1=bin2hex(openssl_encrypt($data1, "AES-256-CBC", $key, OPENSSL_RAW_DATA, $iv));
+
+$hashs="HashKey=".$key."&".$edata1."&HashIV=".$iv;
+
+$hash=strtoupper(hash("sha256",$hashs));
+
+?>
+
+<br><br>
+<form method=post action="https://core.newebpay.com/MPG/mpg_gateway">
+
+ 店號(MID):[<font color=green><?=$mid?></font>] <input name="MerchantID" value="<?=$mid?>" readonly type="hidden"><br>
+ 版號(Version):2.0 <input name="Version" value="2.0" readonly type="hidden"><br>
+ 加密資料(TradeInfo):<br>[<font color=green><?=$edata1?></font>]
+ <input name="TradeInfo" value="<?=$edata1?>" readonly type="hidden"><br>
+ 檢核碼(TradeSha):<br>[<font color=green><?=$hash?></font>]
+ <input name="TradeSha" value="<?=$hash?>" readonly type="hidden"><br><br>
+NWP Test - MPG <br>
+Press 'submit' to pay.<br> 
+ <input type=submit>
+</form>
