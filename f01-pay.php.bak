@@ -1,6 +1,6 @@
 <?php
 
-include "techer.php";
+include "merc.php";
 
 
 $data1=http_build_query(array(
@@ -39,3 +39,4 @@ NWP Test - MPG <br>
 Press 'submit' to pay.<br> 
  <input type=submit>
 </form>
+

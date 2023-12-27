@@ -1,0 +1,34 @@
+<?php
+include "20231220.php"; // Include file containing MerchantID, HashKey, and HashIV 開立字軌
+
+
+// Build transaction data
+$data1 = http_build_query(array(
+    //'MerchantID' => $mid, // Updated MerchantID
+    'RespondType' => 'JSON',
+    'Version' => '1.0', // Confirm correct API version
+    'TimeStamp' => time(),
+	'InvoiceNumber' => 'XY00000000', //發票年度
+	'InvalidReason' => "MyOrder1703061990",
+));
+
+echo "Original Data:<br><font color=red>".$data1."</font><br><br>Encrypted Data:";
+
+// AES Encrypt transaction data
+$edata1 = bin2hex(openssl_encrypt($data1, "AES-256-CBC", $key, OPENSSL_RAW_DATA, $iv));
+
+// SHA256 Hash
+$hashs = "HashKey=" . $key . "&" . $edata1 . "&HashIV=" . $iv;
+$hash = strtoupper(hash("sha256", $hashs));
+
+?>
+
+<form method="post" action="https://cinv.ezpay.com.tw/Api/invoice_invalid">
+    <p>MerchantID_ (MID): [<font color=green><?= $mid ?></font>] <input name="MerchantID_" value="<?= $mid ?>" type="hidden"></p>
+    <p>Version: 1.0 <input name="Version" value="1.0" type="hidden"></p>
+	
+    <p>Encrypted Data (PostData_):<br>[<font color=green><?= $edata1 ?></font>]<input name="PostData_" value="<?= $edata1 ?>" type="hidden"></p>
+    
+    <p><input type="submit" value="Submit"></p>
+	
+</form>

@@ -1,17 +1,19 @@
 <?php
-
 include "merc.php";
 
 
-$data1=http_build_query(array(
-'MerchantID'=>$mid,
-'TimeStamp'=>time(),
-'Version'=>'2.0',
-'RespondType'=>'JSON',
-'MerchantOrderNo'=>"MyOrder".time(),
-'Amt'=>'10',
-'ItemDesc' =>'411135053',
-"NotifyURL"=>"https://wcmoc.line-fans.com/wp_notify_lom.php?ID=411135053&pay=CVS"
+$data1 = http_build_query(array(
+    'MerchantID' => $mid,
+    'RespondType' => 'JSON',
+    'Version' => '2.0',
+    'TimeStamp' => time(),
+	'LgsType' => 'C2C',
+	'ShipType' => '1',
+	'MerchantOrderNo'=>"MyOrder".time(),
+	'Amt'=>'30',
+	'ItemDesc' =>'商品說明',
+	"NotifyURL"=>"https://wcmoc.line-fans.com/wp_notify_lom.php?ID=411135053&pay=CVS"
+
 
 ));
 
@@ -26,17 +28,19 @@ $hash=strtoupper(hash("sha256",$hashs));
 
 ?>
 
-<br><br>
-<form method=post action="https://core.newebpay.com/MPG/mpg_gateway">
+<form method=post action="https://ccore.newebpay.com/MPG/mpg_gateway">
 
  店號(MID):[<font color=green><?=$mid?></font>] <input name="MerchantID" value="<?=$mid?>" readonly type="hidden"><br>
  版號(Version):2.0 <input name="Version" value="2.0" readonly type="hidden"><br>
+ 版號(Version):2.0 <input name="LgsType" value="C2C" readonly type="hidden"><br>
+ 版號(Version):2.0 <input name="ShipType" value="1" readonly type="hidden"><br>
+ 版號(Version):2.0 <input name="LgsType" value="C2C" readonly type="hidden"><br>
  加密資料(TradeInfo):<br>[<font color=green><?=$edata1?></font>]
  <input name="TradeInfo" value="<?=$edata1?>" readonly type="hidden"><br>
+ 
  檢核碼(TradeSha):<br>[<font color=green><?=$hash?></font>]
  <input name="TradeSha" value="<?=$hash?>" readonly type="hidden"><br><br>
 NWP Test - MPG <br>
 Press 'submit' to pay.<br> 
  <input type=submit>
 </form>
-
